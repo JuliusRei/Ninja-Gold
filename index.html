@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<link rel="stylesheet" type="text/css" href="css/style.css">
+<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+<head>
+	<title>Ninja Gold</title>
+</head>
+
+<body>
+	<div id = "container">
+		<img src = "Images/pokeninja.gif" style = "height: 110px;width: 110px;"></div>
+
+		<div class = "page-whole" >
+			<div class = "page" >
+				<div class ="form-inline" >
+					<button class = " btn btn-danger" id = "btnreset" style = "margin-top:10px">Reset Game</button>
+					<center><hr><h1 >  Ninja Gold</h1><hr></center></div>
+					<div class = "col-xs-3" style="margin-left:60px;">
+						<center><strong>Attempts:</strong><input  id = "attempts" class="form-control col-sm-1 textbox-margin" value = 20 disabled> </center>
+					</div>
+					<div class = "col-xs-3" style="margin-right:150px; float: right">
+						<center><strong>Gold:</strong> </center><input id = "earned"  class="form-control col-sm-1 textbox-margin" value = 0 readonly>
+					</div>
+					<div class = "button-holder">
+
+						<button class = "buttons btn btn-warning" id = "btncave" >Cave</button>
+						<button class = "buttons btn btn-warning " id = "btnmine"  >Mine</button>
+						<button class = "buttons btn btn-warning" id = "btnhouse" >House</button>
+						<button class = "buttons btn btn-warning" id = "btncasino">Casino</button></div>
+						<div class = "world" >
+							<img src = "Images/Cave.jpg" class = "img">
+							<img src = "Images/House.jpg" class = "img img-leftpadding">		
+
+						</div>
+
+						<div class = "world" >
+							<img src = "Images/Goldmine.jpg" class = "img">
+							<img src = "Images/Casino.jpg" class = "img img-leftpadding" >
+						</div>
+						<div id = "cont" class="container showback">
+							<div class = "col-xs-3 logtextbox" style="margin-left:60px;">
+								<center><strong>Total Gains:</strong><input  id = "gained" class="form-control col-sm-1 textbox-margin" value = 0 disabled> </center>
+							</div>
+							<div class = "col-xs-3 logtextbox" style="margin-right:160px; float: right">
+								<center><strong>Total losses:</strong> </center><input id = "lost"  class="form-control col-sm-1 textbox-margin" value = 0 readonly>
+							</div><center><h2>Log</h2>
+							<ul class="nav nav-tabs">
+								<li class = "active"><a data-toggle="tab" href="#log1">All</a></li>
+								<li><a data-toggle="tab" href="#log2">Wins</a></li>
+								<li><a data-toggle="tab" href="#log3">Losses</a></li>
+							</ul>
+						</center>
+
+						<div class="tab-content showback">
+
+							<div id="log1" class="tab-pane fade in active pan-style"  >
+
+							</div>
+							<div id="log2" class="tab-pane fade pan-style">
+
+							</div>
+							<div id="log3" class="tab-pane fade pan-style">
+
+							</div>
+						</div>
+					</div>
+
+
+				</div>
+			</div>
+			<script type="text/javascript" src = "js/jquery.min.js"></script>
+			<script type="text/javascript" src = "js/bootstrap.js"></script>
+			<script>
+				var attempts = 20;
+				var earned = 0;
+				var percent = 0;
+				var loses = [0];
+				var wins  = [0];
+				var events = [];
+				var curclick =  -1;
+
+				function output(){
+					if(events[curclick]['amount']>0){
+						$("#log1").append("<p class = 'win'> Location :"+events[curclick]['location']+"; Time: "+events[curclick]['time']+"; Amount: "+events[curclick]['amount']+"</p>");	
+						$("#log2").append("<p class = 'win'> Location :"+events[curclick]['location']+"; Time: "+events[curclick]['time']+"; Amount: "+events[curclick]['amount']+"</p>");	
+					}
+					else if(events[curclick]['amount']<0){
+						$("#log1").append("<p class = 'lose'> Location :"+events[curclick]['location']+"; Time: "+events[curclick]['time']+"; Amount: "+events[curclick]['amount']+"</p>");	
+						$("#log3").append("<p class = 'lose'> Location :"+events[curclick]['location']+"; Time: "+events[curclick]['time']+"; Amount: "+events[curclick]['amount']+"</p>");	
+					}
+					else{
+						$("#log1").append("<p class = 'noamount'> Location :"+events[curclick]['location']+"; Time: "+events[curclick]['time']+"; Amount: "+events[curclick]['amount']+"</p>");	
+					}
+
+				}
+
+
+				function getSum(total, num) {
+					return total + num;
+				}
+				function gameEnd(){
+					var totalwin = wins.reduce(getSum);
+					var totallose = loses.reduce(getSum);
+					if(earned>=250){
+						alert('You Won! ');
+
+					}
+					else{
+						alert('You Lost!');
+					}
+					disable();
+				}
+				function disable(){
+					$('#btncave').attr('disabled',true);
+					$('#btnhouse').attr('disabled',true);
+					$('#btnmine').attr('disabled',true);
+					$('#btncasino').attr('disabled',true);
+				}
+				function check(){
+					if(earned>=250 && attempts >0){
+						var totalwin = wins.reduce(getSum);
+						var totallose = loses.reduce(getSum);
+						alert('You Won!');
+						disable();
+					}
+				}
+
+				$(function(){
+					$('#btnreset').click(function() {
+						attempts = 20;
+						loses = [0];
+						wins = [0];
+						events = [];
+						curclick = -1;
+						earned = 0;
+						$('#attempts').val(attempts);
+						$('#earned').val(earned);
+						$('#earned').css({ 'background-color': '#EEEEEE','color':'black'});
+						$("#container").animate({
+							top: '500px',
+							left: '270px',
+						});
+						$("#log1").html("");
+						$("#log2").html("");
+						$("#log3").html("");	
+						$('#btncave').attr('disabled',false);
+						$('#btnhouse').attr('disabled',false);
+						$('#btnmine').attr('disabled',false);
+						$('#btncasino').attr('disabled',false);
+						$('#gained').val(0);
+						$('#lost').val(0);
+					});
+				});
+
+				$(function(){
+					$('#btncave').click(function() {
+						$("#container").animate({
+							top: '400px',
+							left: '450px',
+						});
+						--attempts;	
+							//alert(attempts);
+							$('#attempts').val(attempts);
+
+							earned+=5;
+							wins.push(5);
+							$('#earned').val(earned);
+							$('#earned').css({ 'background-color': 'green','color':'black'});
+
+							
+							events.push({location:'Cave',time: new Date().toLocaleString(), amount:5});
+							//alert(events[0]['time']);
+							curclick += 1;
+							output();
+							if(attempts==0){
+								gameEnd();
+							}
+							check();
+							var totalwin = wins.reduce(getSum);
+							$('#gained').val(totalwin);
+						});
+				});
+				$(function(){
+					$('#btnhouse').click(function() {
+						$("#container").animate({
+							top: '400px',
+							left: '800px',
+						});
+						--attempts;	
+						//	alert(attempts);
+						$('#attempts').val(attempts);
+						percent = Math.floor((Math.random() * 10) + 1);
+						++curclick;
+						if(percent>2){
+							earned+=10
+							wins.push(10);
+							$('#earned').val(earned);
+							$('#earned').css({ 'background-color': 'green','color':'black'});
+							events.push({location:'House',time: new Date().toLocaleString(), amount:10});
+							var totalwin = wins.reduce(getSum);
+							$('#gained').val(totalwin);
+
+
+						}
+						else{
+							$('#earned').css({ 'background-color': 'black','color':'white'});
+							events.push({location:'House',time: new Date().toLocaleString(), amount:0});
+							
+						}
+						output();
+						if(attempts==0){
+							gameEnd();
+						}
+						check();
+					});
+				});
+				$(function(){
+					$('#btnmine').click(function() {
+						$("#container").animate({
+							top: '630px',
+							left: '450px',
+						});
+						--attempts;	
+						//	alert(attempts);
+						$('#attempts').val(attempts);
+						percent = Math.floor((Math.random() * 10) + 1);
+						var gold = Math.floor((Math.random() * 25));
+						++curclick;
+						if(percent>2){
+							earned+=gold
+							wins.push(gold);
+							$('#earned').val(earned);
+							$('#earned').css({ 'background-color': 'green','color':'black'});
+							events.push({location:'Gold Mine',time: new Date().toLocaleString(), amount:gold});
+							var totalwin = wins.reduce(getSum);
+							$('#gained').val(totalwin);
+						}
+						else{
+							
+							$('#earned').css({ 'background-color': 'black','color':'white'});
+							events.push({location:'Gold Mine',time: new Date().toLocaleString(), amount:0});
+
+						}
+						output();
+						if(attempts==0){
+							gameEnd();
+							disable();
+						}
+						check();
+					});
+				});
+				$(function(){
+					$('#btncasino').click(function() {
+						$("#container").animate({
+							top: '630px',
+							left: '800px',
+						});
+					//Subtract Attempts every click ->
+
+					--attempts;	
+					$('#attempts').val(attempts);
+
+					percent = Math.floor((Math.random() * 10) + 1);
+					var gold =  Math.floor( Math.random() * ( 1 + 50 - 40 ) ) + 40;
+					++curclick;
+					//alert(gold);
+					if(percent>5){
+
+						earned+=gold;
+						wins.push(gold);
+						//alert(wins);
+						$('#earned').val(earned);
+						$('#earned').css({ 'background-color': 'green','color':'black'});
+						events.push({location:'Casino',time: new Date().toLocaleString(), amount:gold});
+						var totalwin = wins.reduce(getSum);
+						$('#gained').val(totalwin);
+					}
+					else{
+						earned-=gold;
+						loses.push(gold);
+						//alert(loses);
+						$('#earned').val(earned);
+						$('#earned').css({ 'background-color': 'red','color':'black'});
+						events.push({location:'Casino',time: new Date().toLocaleString(), amount:-gold});
+						var totalloss =loses.reduce(getSum);
+						$('#lost').val(totalloss);
+					}
+					output();
+					if(attempts==0){
+						gameEnd();
+					}
+					check();
+					
+				});
+				});
+			</script>
+		</body>
+		</html>
